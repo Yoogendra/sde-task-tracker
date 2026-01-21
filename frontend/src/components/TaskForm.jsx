@@ -13,19 +13,12 @@ const TaskForm = ({ onTaskAdded }) => {
 
         setLoading(true);
         try {
-            await api.post('tasks/', {
-                title,
-                description,
-                status: 'pending' // Default status
-            });
-            
-            // Clear form and notify parent
+            await api.post('tasks/', { title, description, status: 'pending' });
             setTitle('');
             setDescription('');
             if (onTaskAdded) onTaskAdded(); 
-            
         } catch (error) {
-            console.error("Failed to create task", error);
+            console.error(error);
             alert("Error creating task");
         } finally {
             setLoading(false);
@@ -33,39 +26,43 @@ const TaskForm = ({ onTaskAdded }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mb-8 bg-white p-6 rounded-lg shadow-md border border-slate-200">
-            <h3 className="text-xl font-bold mb-4 text-slate-700">Add New Task</h3>
-            
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-600 mb-1">Task Title</label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Task Title</label>
                 <input 
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
                     placeholder="e.g. Design Database Schema"
                     required
                 />
             </div>
 
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-600 mb-1">Description</label>
+            <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Description (Optional)</label>
                 <textarea 
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
                     rows="3"
-                    placeholder="Optional details..."
+                    placeholder="Briefly describe the task..."
                 />
             </div>
 
             <button 
                 type="submit" 
                 disabled={loading}
-                className={`w-full py-2 px-4 rounded text-white font-semibold transition
-                    ${loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+                className={`w-full py-2.5 px-4 rounded-lg text-white text-sm font-semibold shadow-sm transition-all flex justify-center items-center gap-2
+                    ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow active:transform active:scale-95'}`}
             >
-                {loading ? 'Adding...' : 'Create Task'}
+                {loading ? (
+                   <span>Adding...</span>
+                ) : (
+                   <>
+                     <span>+ Create Task</span>
+                   </>
+                )}
             </button>
         </form>
     );
